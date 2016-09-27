@@ -30,7 +30,7 @@ Vagrant.configure(2) do |config|
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
-  # config.vm.network "private_network", ip: "192.168.33.10"
+  config.vm.network "private_network", ip: "192.168.33.10"
 
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
@@ -41,19 +41,22 @@ Vagrant.configure(2) do |config|
   # the path on the host to the actual folder. The second argument is
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
-  # config.vm.synced_folder "../data", "/vagrant_data"
+  config.vm.synced_folder "./vagrant", "/vagrant", create: true
+  # Optionally share the /home/vagrant/source directory with NFS (only for Mac
+  # and Linux host machines, for Windows try SMB).  Use NFS because it is much
+  # faster at copying files and building the sourcecode.
+  config.vm.synced_folder "./source", "/home/vagrant/source", type: "nfs", create: true
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
   # Example for VirtualBox:
   #
-  # config.vm.provider "virtualbox" do |vb|
-  #   # Display the VirtualBox GUI when booting the machine
-  #   vb.gui = true
-  #
-  #   # Customize the amount of memory on the VM:
-  #   vb.memory = "1024"
-  # end
+  config.vm.provider "virtualbox" do |vb|
+    # Enable USB.
+    vb.customize ["modifyvm", :id, "--usb", "on"]
+    # Add a USB passthrough for the SAMD21 bootloader VID & PID.
+    vb.customize ["usbfilter", "add", "0", "--target", :id, "--name", "Adafruit M0 Bootloader", "--vendorid", "0x239a", "--productid", "0x000b"]
+  end
   #
   # View the documentation for the provider you are using for more
   # information on available options.
@@ -71,7 +74,7 @@ Vagrant.configure(2) do |config|
   config.vm.provision "shell", privileged: false, inline: <<-SHELL
     echo "Installing dependencies..."
     sudo apt-get update
-    sudo apt-get install -y build-essential git
+    sudo apt-get install -y build-essential git linux-image-extra-$(uname -r) libreadline-dev wx2.8-headers libwxgtk2.8-0 libwxgtk2.8-dev
 
     echo "Downloading GCC ARM embedded toolchain..."
     cd /usr/local
@@ -80,10 +83,17 @@ Vagrant.configure(2) do |config|
     sudo tar xjf gcc-arm-none-eabi-4_9-2015q3-20150921-linux.tar.bz2
     echo "PATH=\"\$PATH:/usr/local/gcc-arm-none-eabi-4_9-2015q3/bin\"" >> /home/vagrant/.profile
 
+    echo "Building and installing BOSSA..."
+    cd ~
+    git clone https://github.com/shumatech/BOSSA.git
+    cd BOSSA
+    make bin/bossac
+    sudo cp bin/bossac /usr/local/bin/
+
     echo "Cloning MicroPython source..."
-    cd /home/vagrant
+    cd ~/source
     git clone https://github.com/adafruit/micropython.git
 
-    echo "Finished provisioning!  Use the 'vagrant ssh' command to enter VM."
+    echo "Finished provisioning!  Use the 'vagrant ssh' command to enter VM.  MicroPython source is in the /home/vagrant/source/micropython folder."
   SHELL
 end
