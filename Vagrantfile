@@ -91,6 +91,7 @@ Vagrant.configure(2) do |config|
     sudo cp bin/bossac /usr/local/bin/
 
     echo "Cloning MicroPython source..."
+    mkdir -p ~/source
     cd ~/source
     git clone https://github.com/adafruit/micropython.git
 
