@@ -23,7 +23,7 @@ Vagrant-based virtual machine to build MicroPython for Atmel SAMD-based boards.
     and compile the firmware by running:
 
         cd ~/micropython/atmel-samd
-        make BOARD=feather_bluefruit_m0_le
+        make BOARD=feather_m0_bluefruit_le
 
 6.  By default the VM will automatically grab USB devices that use the Adafruit M0
     bootloader (i.e. double press reset button on the board to make its LED pulse
