@@ -43,9 +43,11 @@ Vagrant.configure(2) do |config|
   # argument is a set of non-required options.
   config.vm.synced_folder "./vagrant", "/vagrant", create: true
   # Optionally share the /home/vagrant/source directory with NFS (only for Mac
-  # and Linux host machines, for Windows try SMB).  Use NFS because it is much
-  # faster at copying files and building the sourcecode.
+  # and Linux host machines, for Windows try SMB below).
   #config.vm.synced_folder "./source", "/home/vagrant/source", type: "nfs", create: true
+  # Optionally share the /home/vagrant/source directory with SMB (only for Windows
+  # host machines, for Mac OSX or Linux try NFS above).
+  #config.vm.synced_folder "./source", "/home/vagrant/source", type: "smb", create: true
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
