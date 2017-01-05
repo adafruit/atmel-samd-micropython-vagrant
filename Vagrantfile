@@ -95,7 +95,7 @@ Vagrant.configure(2) do |config|
     echo "Cloning MicroPython source..."
     mkdir -p ~/source
     cd ~/source
-    git clone https://github.com/adafruit/micropython.git
+    git clone https://github.com/adafruit/circuitpython.git
 
     echo "Finished provisioning!  Use the 'vagrant ssh' command to enter VM.  MicroPython source is in the /home/vagrant/source/micropython folder."
   SHELL
