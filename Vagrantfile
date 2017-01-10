@@ -80,10 +80,10 @@ Vagrant.configure(2) do |config|
 
     echo "Downloading GCC ARM embedded toolchain..."
     cd /usr/local
-    sudo wget https://launchpad.net/gcc-arm-embedded/4.9/4.9-2015-q3-update/+download/gcc-arm-none-eabi-4_9-2015q3-20150921-linux.tar.bz2 2> /dev/null
+    sudo wget https://launchpad.net/gcc-arm-embedded/5.0/5-2016-q3-update/+download/gcc-arm-none-eabi-5_4-2016q3-20160926-linux.tar.bz2 2> /dev/null
     echo "Installing GCC ARM embedded toolchain..."
-    sudo tar xjf gcc-arm-none-eabi-4_9-2015q3-20150921-linux.tar.bz2
-    echo "PATH=\"\$PATH:/usr/local/gcc-arm-none-eabi-4_9-2015q3/bin\"" >> /home/vagrant/.profile
+    sudo tar xjf gcc-arm-none-eabi-5_4-2016q3-20160926-linux.tar.bz2
+    echo "PATH=\"\$PATH:/usr/local/gcc-arm-none-eabi-5_4-2016q3/bin\"" >> /home/vagrant/.profile
 
     echo "Building and installing BOSSA..."
     cd ~
