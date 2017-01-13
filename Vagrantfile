@@ -12,11 +12,7 @@ Vagrant.configure(2) do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
-  # Note the Ubuntu 14.04 LTS 32-bit box is used because the GCC ARM embedded
-  # toolchain binaries are distributed only with 32-bit binaries.  Although
-  # possible to run on 64-bit systems it requires fiddling with esoteric
-  # Debian & Ubuntu options to get 32-bit libc and more.  Just use a 32-bit OS.
-  config.vm.box = "ubuntu/trusty32"
+  config.vm.box = "ubuntu/trusty64"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -75,15 +71,13 @@ Vagrant.configure(2) do |config|
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", privileged: false, inline: <<-SHELL
     echo "Installing dependencies..."
-    sudo apt-get update
-    sudo apt-get install -y build-essential git linux-image-extra-$(uname -r) libreadline-dev wx2.8-headers libwxgtk2.8-0 libwxgtk2.8-dev
+    sudo add-apt-repository -y ppa:team-gcc-arm-embedded/ppa
 
-    echo "Downloading GCC ARM embedded toolchain..."
-    cd /usr/local
-    sudo wget https://launchpad.net/gcc-arm-embedded/5.0/5-2016-q3-update/+download/gcc-arm-none-eabi-5_4-2016q3-20160926-linux.tar.bz2 2> /dev/null
-    echo "Installing GCC ARM embedded toolchain..."
-    sudo tar xjf gcc-arm-none-eabi-5_4-2016q3-20160926-linux.tar.bz2
-    echo "PATH=\"\$PATH:/usr/local/gcc-arm-none-eabi-5_4-2016q3/bin\"" >> /home/vagrant/.profile
+    sudo apt-get update -qq
+    sudo apt-get install -y python3 gcc-multilib pkg-config libffi-dev libffi-dev:i386 qemu-system gcc-mingw-w64
+
+    sudo apt-get install -y build-essential git linux-image-extra-$(uname -r) libreadline-dev wx2.8-headers libwxgtk2.8-0 libwxgtk2.8-dev autoconf libtool libffi-dev pkg-config
+    sudo apt-get install -y --force-yes gcc-arm-embedded
 
     echo "Building and installing BOSSA..."
     cd ~
@@ -97,6 +91,9 @@ Vagrant.configure(2) do |config|
     cd ~/source
     git clone https://github.com/adafruit/circuitpython.git
 
-    echo "Finished provisioning!  Use the 'vagrant ssh' command to enter VM.  MicroPython source is in the /home/vagrant/source/micropython folder."
+    cd circuitpython
+    git submodule update --init --recursive
+
+    echo "Finished provisioning!  Use the 'vagrant ssh' command to enter VM.  CircuitPython source is in the /home/vagrant/source/circuitpython folder."
   SHELL
 end
