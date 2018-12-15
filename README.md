@@ -1,4 +1,14 @@
-# Atmel SAMD MicroPython Firmware Build Machine
+DEPRECATED LIBRARY atmel-samd-micropython-vagrant
+=================================================
+
+This library has been deprecated! We are leaving this up for historical and research purposes but archiving the repository.
+
+We are only supporting CircuitPython.
+
+Check out this this guide on building CircuitPython: https://learn.adafruit.com/building-circuitpython 
+
+
+## Atmel SAMD MicroPython Firmware Build Machine
 
 Vagrant-based virtual machine to build MicroPython for Atmel SAMD-based boards.
 
